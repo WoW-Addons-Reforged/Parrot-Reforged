@@ -18,7 +18,7 @@
 	<Include file="libs\AceGUI-3.0-SharedMediaWidgets\widget.xml"/>
 	<Include file="libs\LibSink-2.0\lib.xml"/>
 	<Include file="libs\LibCustomGlow-1.0\LibCustomGlow-1.0.xml"/>
-	<Include file="libs\LibWindow-1.1\lib.xml"/>
+	<Script file="libs\LibWindow-1.1\LibWindow-1.1.lua"/>
 	<Include file="libs\LibQTip-1.0\lib.xml"/>
 	<Include file="libs\LibDeflate\lib.xml"/>
 	<!--@end-no-lib-strip@-->

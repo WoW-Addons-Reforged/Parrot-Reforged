@@ -224,6 +224,14 @@ end
 
 local glowColorScratch = { 1, 0.82, 0.15, 0.95 }
 
+local function hasSecretSize(frame)
+	if not issecretvalue or not frame or not frame.GetSize then
+		return false
+	end
+	local ok, width, height = pcall(frame.GetSize, frame)
+	return not ok or issecretvalue(width) or issecretvalue(height)
+end
+
 local function guardGlowOnUpdate(holder, fieldName)
 	if not issecretvalue or not holder then
 		return
@@ -237,8 +245,7 @@ local function guardGlowOnUpdate(holder, fieldName)
 		return
 	end
 	local wrapped = function(self, elapsed)
-		local w, h = self:GetSize()
-		if issecretvalue(w) or issecretvalue(h) then
+		if hasSecretSize(self) then
 			return
 		end
 		return origOnUpdate(self, elapsed)
@@ -273,13 +280,10 @@ local function startIconGlow(holder, r, g, b)
 	if not glow or not holder or not db.critGlow then
 		return
 	end
-	if issecretvalue then
-		local hw, hh = holder:GetSize()
-		if issecretvalue(hw) or issecretvalue(hh) then
-			return
-		end
-	end
 	stopIconGlow(holder)
+	if hasSecretSize(holder) then
+		return
+	end
 
 	local style = db.critGlowStyle or "PIXEL"
 	if style == "NONE" then
@@ -313,6 +317,7 @@ local function startIconGlow(holder, r, g, b)
 		})
 		if ok then
 			holder._activeGlowStyle = "PROC"
+			guardGlowOnUpdate(holder, "_ProcGlowParrotGlow")
 		end
 	elseif glow.PixelGlow_Start then
 		local ok = pcall(glow.PixelGlow_Start, holder, glowColorScratch, 6, 0.28, nil, 1.5, 1, 1, false, "ParrotGlow")
